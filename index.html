@@ -1,84 +1,291 @@
 <!DOCTYPE html>
-<html>
+<html lang="zh-cn">
 <head>
-<meta charset="utf-8">
-<meta name="author" content="智能社 - zhinengshe.com">
-<meta name="copyright" content="智能社 - zhinengshe.com">
-<meta name="viewport"
-      content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
-<meta http-equiv="X-UA-Compatible" content="ie=edge">
-<title>智能社 - www.zhinengshe.com</title>
+<meta charset="UTF-8">
+<title>ParticleGround</title>
 <style>
-    *{
-        margin: 0;
-        padding: 0;
-    }
-    body{
-        background:#fff; text-align: center;}
-    #c1{
-        background: linear-gradient(45deg ,red, green,blue);
-    }
+html,body{
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+}
+ul{
+  margin: 0;
+  padding: 0;
+}
+li{
+  list-style: none;
+}
+ul, li, img, section{
+  width: 100%;
+  height: 100%;
+}
+ul{
+  -webkit-transition: -webkit-transform 600ms;
+  -moz-transition: -moz-transform 600ms;
+  transition: transform 600ms;
+}
+li{
+  float: left;
+  position: relative;
+}
+#btn,
+li > *{
+  position: absolute;
+  left: 0;
+  top: 0;
+}
+.info{
+  margin: 1rem;
+  font: 20px "微软雅黑";
+  color: #ececec;
+  text-shadow: 2px 2px 0 #333;
+}
+#particle{
+  background-color: #000;
+}
+#wave{
+  background: #0076d1;
+  background: -webkit-linear-gradient(top,#0076d1,#5db8ff);
+  background: -moz-linear-gradient(top,#0076d1,#5db8ff);
+  background: linear-gradient(top,#0076d1,#5db8ff);
+}
+
+#btn{
+  z-index: 99;
+  top: auto;
+  bottom: 20px;
+  right: 0;
+  text-align: center;
+}
+#btn span{
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+  background-color: #ccc;
+  border: 4px solid #fff;
+  box-shadow: 0 0 2px #ccc inset;
+  border-radius: 50%;
+  cursor: pointer;
+}
+#btn span:last-of-type{
+  margin-right: 0;
+}
+#btn .active{
+  background-color: aqua;
+  box-shadow: none;
+}
+
+#fork img{
+  width: 149px;
+  height: 149px;
+  position: absolute;
+  z-index: 99;
+  top: -7px;
+  right: 0;
+  border: 0;
+}
 </style>
-<script>
-    function rnd(m,n){
-      return parseInt(Math.random()*(n-m)+m);
-    }
-    function d2a(n){
-        return n*Math.PI/180;
-    }
-    function toDou(n){
-        return n<10?'0'+n:''+n;
-    }
-    document.addEventListener('DOMContentLoaded',function(){
-        var oC = document.getElementById('c1');
-        var gd = oC.getContext('2d');
-        var timer=null;
-        var cx = oC.width/2;
-        var cy = oC.height/2;
-       
-        function drawArc(start,end,r,color){
-            gd.beginPath();
-            gd.lineWidth = 20;
-            start -= 90;
-            end -= 90;
-            color = color||'#000';
-            gd.strokeStyle = color;
-            gd.arc(cx,cy,r,d2a(start),d2a(end),false);
-            gd.stroke();
-        }
-        function time(){
-            var oDate = new Date();
-            var h = oDate.getHours();
-            var m = oDate.getMinutes();
-            var s = oDate.getSeconds();
-            var ms = oDate.getMilliseconds();//毫秒
-            gd.clearRect(0,0,oC.width,oC.height);
-
-            drawArc(0,s*6+ms/1000*6,100,'red');//秒
-            drawArc(0,m*6+s/60*6,80,'yellow');//分
-            drawArc(0,h%12*30+m/60*30,60,'aqua');//时
-            gd.beginPath()
-            gd.lineWidth = 1;
-            gd.textAlign = 'center';
-            gd.font = '50px 微软雅黑';
-             gd.strokeStyle='rgb('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+')';
-            gd.strokeText('弧版时钟',oC.width/2,100);
-            gd.beginPath();
-            gd.lineWidth = 1;
-            gd.textAlign = 'center';
-            gd.font = '16px 黑体';
-            gd.fillStyle='aqua';
-            gd.fillText(toDou(h)+':'+toDou(m)+':'+toDou(s),oC.width/2,oC.height/2);
-
-        }
-        time();
-        clearInterval(timer);
-        timer=setInterval(time,16);
-    },false);
-</script>
 </head>
-
 <body>
-    <canvas id="c1" width="800" height="600"></canvas>
+
+<ul>
+  <li id="particle">
+    <section class="container"></section>
+    <div id="troduce"  style="width:80px;height:30px ;background:red; ">
+      <a href="http://taofamily.github.io/arcClock/arcClock.html">弧版时钟</a>
+    </div>
+  </li>
+  <li id="wave">
+    <section class="container"></section>
+  </li>
+  <li id="snow">
+    <img src="1.jpg">
+    <section class="container"></section>
+  </li>
+</ul>
+
+<aside id="btn">
+  <span class="active" title="粒子运动"></span>
+  <span title="波浪运动"></span>
+  <span title="雪花飘落"></span>
+</aside>
+
+
+<!-- 引入插件 -->
+<script src="particleground.min.js"></script>
+<script>
+var span = document.getElementById( 'btn' ).getElementsByTagName( 'span' );
+var ul = document.getElementsByTagName( 'ul' )[0];
+var li = ul.getElementsByTagName( 'li' );
+var liWidth = 0;
+var curIndex = 0;
+
+init();
+
+//插件粒子运动API
+//注：Particleground下的三个对象都有着pause和open方法，用于暂停和开启动画
+var particle = new Particleground.particle( '#particle .container', {
+  //全局透明度，默认0.8
+  opacity: .8,
+  //粒子颜色数组，默认随机色
+  // color: [ 'rgba( 255, 255, 255, .5 )', 'red', 'green', 'blue' ],
+  //粒子个数，默认为容器的0.1倍
+  //传入[0, 1)显示容器相应倍数的值，或传入具体个数[1, +∞)
+  num: .1,
+  //运动速度[0, +∞]，默认1
+  speed: 1,
+  //粒子最大半径，默认2.4
+  max: 2.4,
+  //粒子最小半径，默认0.6
+  min: .6,
+  //连接线最大距离，默认180
+  dis: 180,
+  //连接线段的宽度，默认0.2
+  lineWidth: .2,
+  //范围越大，连接的点越多，默认240
+  r: 240,
+  //移动事件的元素,默认为canvas，或传入原生js选择元素
+  // eventElem: document,
+  //让画布宽高自适应窗口大小的改变，默认false
+  resize: true
+});
+var wave, snow;
+
+for( var i = 0; i < span.length; i++ ){
+
+  span[ i ].index = i;
+  span[ i ].onclick = function(){
+
+    curIndex = this.index;
+    slideTab();
+
+  };
+
+}
+
+window.onresize = function(){
+
+  init();
+  slideTab();
+
+};
+
+document.onkeyup = function( e ){
+
+  switch( e.keyCode ){
+    //left
+    case 37:
+      curIndex--;
+      if( curIndex < 0 ){
+        curIndex = li.length-1;
+      }
+      slideTab();
+      break;
+    case 39: 
+      curIndex++;
+      if( curIndex > li.length-1 ){
+        curIndex = 0;
+      }
+      slideTab();
+      break;
+  }
+
+};
+
+function init(){
+
+  liWidth = document.documentElement.clientWidth;
+
+  ul.style.width = liWidth * li.length + 'px';
+
+  for( var i = 0; i < li.length; i++ ){
+
+    li[ i ].style.width = liWidth + 'px';
+
+  }
+
+}
+
+function slideTab(){
+
+  var translate = 'translate('+ -liWidth * curIndex +'px,0)';
+
+  ul.style.transform = translate;
+  ul.style.webkitTransform = translate;
+  ul.style.mozTransform = translate;
+  ul.style.msTransform = translate;
+
+  document.querySelector( '#btn .active' ).removeAttribute( 'class' );
+  span[ curIndex ].className = 'active';
+
+  switch( curIndex ){
+    case 0:
+      particle.open();
+      wave && wave.pause();
+      snow && snow.pause();
+      break;
+    case 1:
+      if( wave ){
+
+        wave.open();
+
+      }else{
+
+        //波浪运动API
+        wave = new Particleground.wave( '#wave .container', {
+          //全局透明度，默认0.8
+          opacity: .8,
+          //线条颜色，默认白色
+          color: '#fff',
+          //线条个数，默认1条，暂未开放
+          // num: 3,
+          //线条最大宽度(粒子最大半径)，默认1.4
+          max: 1.4,
+          //线条最小宽度，默认0.2
+          min: .2,
+          //波峰，默认高度的0.8倍，取值[0-1]，暂未开放
+          // crest: .6,
+          //线条运动速度，默认1.4
+          speed: 1.4,
+          resize: true
+        });
+
+      }
+      particle.pause();
+      snow && snow.pause();
+      break;
+    case 2:
+      if( snow ){
+
+        snow.open();
+
+      }else{
+
+        //雪花飘落API
+        snow = new Particleground.snow( '#snow .container', {
+          //雪花颜色，默认白色
+          color: '#fff',
+          //雪花最大半径，默认6.5
+          max: 6.5,
+          //雪花最小半径，默认0.4
+          min: .4,
+          //运动速度，默认0.4
+          speed: .4,
+          resize: true
+        });
+
+      }
+      particle.pause();
+      wave && wave.pause();
+      break;
+  }
+
+}
+
+</script>
+
 </body>
 </html>

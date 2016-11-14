@@ -13,10 +13,8 @@
         margin: 0;
         padding: 0;
     }
-    body{
-        background:#fff; text-align: center;}
-    #c1{
-        background: linear-gradient(45deg ,red, green,blue);
+    html,body{
+        background:#fff; text-align: center; background: linear-gradient(45deg ,red, green,blue);overflow: hidden;}
     }
 </style>
 <script>
@@ -31,6 +29,8 @@
     }
     document.addEventListener('DOMContentLoaded',function(){
         var oC = document.getElementById('c1');
+        oC.width=document.documentElement.clientWidth;
+        oC.height=document.documentElement.clientHeight;
         var gd = oC.getContext('2d');
         var timer=null;
         var cx = oC.width/2;
@@ -79,6 +79,6 @@
 </head>
 
 <body>
-    <canvas id="c1" width="800" height="600"></canvas>
+    <canvas id="c1" ></canvas>
 </body>
 </html>

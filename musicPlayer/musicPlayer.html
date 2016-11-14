@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{margin: 0;padding: 0;}
+		#box{width:100%;height:100%;background: linear-gradient(red, green,white,blue);position: relative;}
+		#div1{height: 40px;background: linear-gradient(60deg,red,yellow,pink);text-align: center; line-height: 40px;}
+		ol li{
+			width: 200px;
+			height: 30px; 
+			line-height: 40px;
+			white-space: nowrap;
+			text-overflow: ellipsis;
+			overflow: hidden;
+			font-size: 20px;	
+		}
+		#play_img{position: absolute;bottom:60px;left: 0;}
+		li.on{
+			background:url("img/play.gif") no-repeat right center;
+			padding-right: 20px;	
+		}
+		#pic{
+			background:url("img/0.jpg");
+			width: 160px;
+			height: 160px;
+			border-radius: 50%;
+			margin-left: 80px;
+			margin-bottom: 30px;
+		}
+		input{height:40px;width:76px;font-size:16px;border-radius: 6px;background:linear-gradient(red, green,blue,white);}
+		input.on{background: linear-gradient(red, green);}
+		#btn{position: absolute;bottom: 10px;left: 0;}
+		#play_img span{position: absolute;left: 0;bottom: 3px;background:none; width: 30px;height: 32px;}
+	</style>
+	<script>
+		window.onload=window.onresize=function(){
+			var aLi=document.getElementsByTagName('li');
+			var oA=document.querySelector('audio');
+			var aBtn=document.querySelectorAll('input');
+			var oPic=document.querySelector('#pic');
+			var oSpan=document.querySelector('span');
+			var oBox=document.getElementById('box');
+			var oH=document.querySelector('h2');
+
+			oBox.style.height=document.documentElement.clientHeight+'px';
+			var arr=['陈奕迅 - 十年','千千阙歌','时间都去哪儿了','王力宏 - 我们的歌','周杰伦 - 青花瓷','雨的印记','小苹果','夜的钢琴曲'];
+			var iNow=0;
+			var timer=null;
+			var timer1=null;
+			clearInterval(timer1);
+			timer1=setInterval(function(){
+				oH.style.color='rgb('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+')';
+			},16);
+			var iSpeed=0;
+			for(var i=0;i<aLi.length;i++){
+				aLi[i].index = i;
+				aLi[i].ondblclick=function(){
+					aBtn[0].value='暂停';
+					iSpeed=0;
+					iNow=this.index;
+					for(var i=0;i<aLi.length;i++){
+						aLi[i].className='';
+						aLi[i].style.color='black';
+					}
+					oA.src='mp3/'+arr[iNow]+'.mp3';
+					oA.play();
+					oPic.style.background='url("img/'+iNow+'.jpg")';
+					this.style.color='rgb('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+')';
+					this.className='on';
+					clearInterval(timer);
+					timer=setInterval(function(){
+						iSpeed+=0.5;
+						oPic.style.transform='rotate('+iSpeed+'deg)' ;
+					},16);
+				}
+			}
+			//播放暂停
+			oSpan.onclick=function(){
+				aLi[0].style.color='rgb('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+')';
+					if(aLi[iNow].className=='on'){
+						if(iNow==0){
+							aLi[0].className='on';
+						}else{
+							aLi[0].className='';
+							aLi[0].style.color='#000';
+						}
+						
+					}else{
+						aLi[0].className='on';
+					}
+				if(oA.paused){
+					aBtn[0].value='暂停';
+					oA.play();
+					clearInterval(timer);
+					timer=setInterval(function(){
+						iSpeed+=0.5;
+						oPic.style.transform='rotate('+iSpeed+'deg)' ;
+					},16);
+				}else{
+					aLi[0].value='播放';
+					oA.pause();
+					clearInterval(timer);
+				}	
+			};
+			aBtn[0].onclick=function(){
+				aLi[0].style.color='rgb('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+')';
+				if(aLi[iNow].className=='on'){
+					if(iNow==0){
+						aLi[0].className='on';
+					}else{
+						aLi[0].className='';
+						aLi[0].style.color='#000';
+					}	
+				}else{
+					aLi[0].className='on';
+				}
+				if(oA.paused){
+					this.value='暂停';
+					oA.play();
+					clearInterval(timer);
+					timer=setInterval(function(){
+						iSpeed+=0.5;
+						oPic.style.transform='rotate('+iSpeed+'deg)' ;
+					},16);
+					this.style.background='linear-gradient(red, green)';
+				}else{
+					this.value='播放';
+					oA.pause();
+					clearInterval(timer);
+					this.style.background='linear-gradient(red, green,blue,white)';
+				}	
+			};
+			for(var i=1;i<aBtn.length;i++){
+				aBtn[i].index=i;
+				aBtn[i].onclick=function(){
+					oA.playState=this.index;
+					for(var i=1;i<aBtn.length;i++){
+						aBtn[i].className='';
+					}
+					this.className='on';	
+				};	
+			}
+
+			oA.onended=function(){
+				//oPic.style.animation='none';
+				switch(oA.playState){
+					case 1:
+						//单曲
+						change();
+					break;
+					case 2:
+						//列表循环
+						iNow++;
+						if(iNow==arr.length){
+							iNow=0;
+						}
+						change();
+					break;
+					case 3:
+						//随机播放
+						iNow=rnd(0,arr.length);
+						change();
+					break;
+					case 4:
+						//顺序播放
+						if(iNow==arr.length-1){
+							aLi[iNow].className='';
+							aLi[iNow].style.color='#000';
+							clearInterval(timer);
+							return;
+						}
+						iNow++;
+						change();
+					break;
+					default: 
+						if(iNow==arr.length-1){
+							aLi[iNow].className='';
+							aLi[iNow].style.color='#000';
+							clearInterval(timer);
+							return;
+						}
+						iNow++;
+						change();
+					break;
+				}
+			};	
+			function change(){
+				for(var i=0;i<aLi.length;i++){
+					aLi[i].className='';
+					aLi[i].style.color='black';
+				}
+				aLi[iNow].style.color='rgb('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+')';
+				aLi[iNow].className='on';
+				oA.src='mp3/'+arr[iNow]+'.mp3';
+				oA.play();
+				oPic.style.background='url("img/'+iNow+'.jpg")';
+			}
+			function rnd(m,n){
+				return parseInt(Math.random()*(n-m)+m)
+			}
+		};
+	</script>
+</head>
+<body>
+	<div id="box">
+		<div id="div1">
+			<h2>随我音乐盒</h2>
+		</div>
+		<ol>
+			<li>陈奕迅 - 十年</li>
+			<li>千千阙歌</li>
+			<li>时间都去哪儿了</li>
+			<li>王力宏 - 我们的歌</li>
+			<li>周杰伦 - 青花瓷</li>
+			<li>雨的印记</li>
+			<li>小苹果</li>
+			<li>夜的钢琴曲</li>
+		</ol>
+		<div id="play_img">
+			<div id="pic"></div>
+			<audio src="mp3/陈奕迅 - 十年.mp3" controls style="width:410px"></audio>
+			<span></span>
+		</div>
+		<div id="btn">
+			<input type="button" value="播放" id="btn0">
+			<input type="button" value="单曲播放" id="btn1">
+			<input type="button" value="列表循环" id="btn2">
+			<input type="button" value="随机播放" id="btn3">
+			<input type="button" value="顺序播放" id="btn4">
+		</div>
+	</div>
+</body>
+</html>

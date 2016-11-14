@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{
+			padding: 0;
+			margin: 0;
+			list-style: none;
+		}
+		body{background: #000;}
+		#div1{text-align: center;width: 100%;height: 100%;}
+		#div1 input{width: 80px;height: 30px;background: linear-gradient(60deg,red,green);font-size: 16px;color: pink;border-radius: 4px;margin:10px;}
+		ul{
+			width: 300px;
+			height: 300px;
+			background: red;
+			position: absolute;
+			left: 50%;
+			top:50%;
+			margin-left: -150px;
+			margin-top:-150px;
+		} 
+		ul li{
+			width: 300px;
+			height: 300px;
+			line-height: 300px; text-align: center;font-size: 50px;position: absolute;left: 0;top: 0;
+			color: blue;
+			background:linear-gradient(45deg,red,#fff,green);
+			transition: 0.4s all ease;
+			transform:perspective(800px) translateX(0px) rotateY(0deg);
+		}
+		ul li.cur{
+			z-index: 5;
+			
+		}
+		ul li.l1{
+			z-index: 3;
+			transform:perspective(800px) translateX(-200px) rotateY(60deg);
+			opacity: 0.8;
+		}
+		ul li.l2{
+			opacity: 0;
+			transform:perspective(800px) translateX(-250px) rotateY(60deg);
+
+		}
+		ul li.r1{
+			z-index: 3;
+			transform:perspective(800px) translateX(200px) rotateY(-60deg);
+			opacity: 0.8;
+		}
+		ul li.r2{
+			opacity: 0;
+			transform:perspective(800px) translateX(250px) rotateY(-60deg);
+		}
+	</style>
+	<script>
+		window.onload=function(){
+			var oBtn1=document.getElementById('btn1');
+			var oBtn2=document.getElementById('btn2');
+			var oUl=document.getElementById('ul1');
+			var aLi=oUl.children;
+			var arr=[];
+			for(var i=0;i<aLi.length;i++){
+				arr.push(aLi[i].className);
+			}
+			var bFlag=true;
+			oBtn1.onclick=function(){
+				if(!bFlag){
+					return;
+				}
+
+				arr.push(arr.shift());
+				
+				for(var i=0;i<aLi.length;i++){
+					aLi[i].className=arr[i];
+					console.log(aLi[i].style.background);
+					if(aLi[i].style.transform=='perspective(800px) translateX(0px) rotateY(0deg)'){
+						bFlag=true;
+					}
+				}
+			};
+			oBtn2.onclick=function(){
+				arr.unshift(arr.pop());
+
+				for(var i=0;i<aLi.length;i++){
+					aLi[i].className=arr[i];
+				}
+			};
+		};
+	</script>
+</head>
+<body>
+	<ul id="ul1">
+		<li class="l2">6</li>
+		<li class="l1">7</li>
+		<li class="cur">1</li>
+		<li class="r1">2</li>
+		<li class="r2">3</li>
+		<li>4</li>
+		<li>5</li>
+	</ul>
+	<div id="div1">
+		<input type="button" value="上一个" id="btn1">
+		<input type="button" value="下一个" id="btn2">
+	</div>
+</body>
+</html>

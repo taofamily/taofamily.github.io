@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Document</title>
+	<style>
+		*{padding: 0;
+			margin: 0;}
+		html,body{
+			background: #000;
+			width: 100%;
+			height: 100%;
+			overflow: hidden;
+		}
+	</style>
+	<script>
+			function rnd(m,n){
+				return parseInt(Math.random()*(n-m)+m);
+			}
+			document.addEventListener('DOMContentLoaded',function(){
+				var oC=document.getElementById('c');
+				var gd=oC.getContext('2d');
+				var N=5;
+				aPoint=[];
+				var LEN=20;
+				var pw=1;
+				var ph=1;
+				var oldArr=[];
+				oC.width=document.documentElement.clientWidth;
+				oC.height=document.documentElement.clientHeight;
+				for(var i=0;i<N;i++){
+					aPoint[i]={
+						x:rnd(0,oC.width),
+						y:rnd(0,oC.height),
+						iSpeedX:rnd(-10,10),
+						iSpeedY:rnd(-10,10)
+					};
+				}
+				function point(p){
+					gd.strokeStyle='rgb('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+')';
+					gd.strokeRect(p.x,p.y,pw,ph);
+				}
+				setInterval(function(){
+					gd.clearRect(0,0,oC.width,oC.height);
+					for(var i=0;i<aPoint.length;i++){
+						point(aPoint[i]);
+						aPoint[i].x+=aPoint[i].iSpeedX;
+						aPoint[i].y+=aPoint[i].iSpeedY;
+						if(aPoint[i].x<0){
+							aPoint[i].x=0;
+							aPoint[i].iSpeedX*=-1;
+						}
+						if(aPoint[i].x>oC.width-pw/2){
+							aPoint[i].x=oC.width-pw;
+							aPoint[i].iSpeedX*=-1;
+						}
+						if(aPoint[i].y<0){
+							aPoint[i].y=0;
+							aPoint[i].iSpeedY*=-1;
+						}
+						if(aPoint[i].y>oC.height-ph/2){
+							aPoint[i].y=oC.height-ph;
+							aPoint[i].iSpeedY*=-1;
+						}
+					}
+					gd.beginPath();
+					gd.moveTo(aPoint[0].x,aPoint[0].y);
+					for(var i=1;i<aPoint.length;i++){
+						gd.lineTo(aPoint[i].x+pw/2,aPoint[i].y+ph/2);
+						gd.strokeStyle='rgb('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+')';
+						
+					}
+					gd.closePath();
+					gd.stroke();
+
+					//画尾巴
+					
+					var arr=[];
+					for(var i=0;i<aPoint.length;i++){
+//						arr.push(aPoint[i])
+						arr[i]={
+							x:aPoint[i].x,
+							y:aPoint[i].y
+						};
+					}
+					console.log(arr);
+					oldArr.push(arr);
+					if(oldArr.length>LEN){
+						oldArr.shift();
+					}
+					console.log(oldArr);
+					gd.beginPath();
+					for(var i=0;i<oldArr.length;i++){
+						 var opacity = i/oldArr.length;
+                    gd.strokeStyle='rgba('+rnd(0,256)+','+rnd(0,256)+','+rnd(0,256)+','+opacity+')';
+						gd.moveTo(oldArr[i][0].x,oldArr[i][0].y)
+						for(var j=1;j<oldArr[i].length;j++){
+							gd.lineTo(oldArr[i][j].x,oldArr[i][j].y);
+						}
+						gd.closePath();
+						gd.stroke();
+					}
+				},30);
+			},false);
+	</script>
+</head>
+<body>
+	<a href="http://taofamily.github.io"">返回首页</a>
+	<canvas id="c"></canvas>
+</body>
+</html>

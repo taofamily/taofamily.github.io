@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+<head>
+<meta charset="UTF-8">
+<title>ParticleGround</title>
+<link rel="stylesheet" href="css/show.css">
+<link rel="stylesheet" href="css/ring.css">
+<link rel="stylesheet" href="css/nine.css">
+<style>
+html,body{
+	width: 100%;
+	height: 100%;
+	margin: 0;
+	overflow: hidden;
+}
+ul{
+	margin: 0;
+	padding: 0;
+}
+li{
+	list-style: none;
+}
+ul, li, img, section{
+	width: 100%;
+	height: 100%;
+}
+ul{
+	-webkit-transition: -webkit-transform 600ms;
+	-moz-transition: -moz-transform 600ms;
+	transition: transform 600ms;
+}
+li{
+	float: left;
+	position: relative;
+}
+#btn,
+li > *{
+	position: absolute;
+	left: 0;
+	top: 0;
+}
+.info{
+	margin: 1rem;
+	font: 20px "微软雅黑";
+	color: #ececec;
+	text-shadow: 2px 2px 0 #333;
+}
+#particle{
+	background-color: #000;
+}
+#wave{
+	background: #0076d1;
+	background: -webkit-linear-gradient(top,#0076d1,#5db8ff);
+	background: -moz-linear-gradient(top,#0076d1,#5db8ff);
+	background: linear-gradient(top,#0076d1,#5db8ff);
+}
+#hover{
+	background: #0076d1;
+	background: -webkit-linear-gradient(45deg,#fff,pink,yellow);
+	background: -moz-linear-gradient(45deg,#fff,pink,yellow);
+	background: linear-gradient(45deg,#fff,pink,yellow);
+}
+#btn{
+	z-index: 99;
+	top: auto;
+	bottom: 20px;
+	right: 0;
+	text-align: center;
+}
+#btn span{
+	display: inline-block;
+	width: 10px;
+	height: 10px;
+	margin-right: 10px;
+	background-color: #ccc;
+	border: 4px solid #fff;
+	box-shadow: 0 0 2px #ccc inset;
+	border-radius: 50%;
+	cursor: pointer;
+}
+#btn span:last-of-type{
+	margin-right: 0;
+}
+#btn .active{
+	background-color: aqua;
+	box-shadow: none;
+}
+
+</style>
+</head>
+<body>
+<ul>
+	<li id="particle">
+		<a href="http://taofamily.github.io/index.html" id="back">返回主页</a>
+		<div id="ul1">
+		祝您玩得开心
+		<!-- <li></li> -->
+		</div>
+		<a href="javascript:;" id="Ring">点击展示</a>
+	</li>
+	<li id="wave">
+		<div id="ul2">
+			<p class="l2">6</p>
+			<p class="l1">7</p>
+			<p class="cur">1</p>
+			<p class="r1">2</p>
+			<p class="r2">3</p>
+			<p>4</p>
+			<p>5</p>
+		</div>
+		<div id="Btn">
+			<input type="button" value="上一个" id="btn1">
+			<input type="button" value="下一个" id="btn2">
+		</div>
+	</li>
+	<li id="hover">
+		<div id="boxNine">
+			<div><img src="hover/img/1.jpg"></div>
+			<div><img src="hover/img/2.jpg"></div>
+			<div><img src="hover/img/3.jpg"></div>
+			<div><img src="hover/img/4.jpg"></div>
+			<div><img src="hover/img/5.jpg"></div>
+			<div><img src="hover/img/6.jpg"></div>
+			<div><img src="hover/img/7.jpg"></div>
+			<div><img src="hover/img/8.jpg"></div>
+			<div><img src="hover/img/9.jpg"></div>
+		</div>
+	</li>
+</ul>
+
+<aside id="btn">
+	<span class="active" title="粒子运动"></span>
+	<span title="波浪运动"></span>
+	<span title="雪花飘落"></span>
+</aside>
+<script>
+var span = document.getElementById( 'btn' ).getElementsByTagName( 'span' );
+var ul = document.getElementsByTagName( 'ul' )[0];
+var li = ul.getElementsByTagName( 'li' );
+var liWidth = 0;
+var curIndex = 0;
+
+init();
+for( var i = 0; i < span.length; i++ ){
+
+	span[ i ].index = i;
+	span[ i ].onclick = function(){
+		window.onload=null;
+		curIndex = this.index;
+		slideTab();
+
+	};
+
+}
+	var oUl=document.getElementById('ul1');
+	var oBtn=document.getElementById('Ring');
+	var bReady=true;
+	oBtn.onclick=function(){
+		if(bReady==true){
+			var N=11;
+			for(var i=0;i<N;i++){
+				var oP=document.createElement('p');
+				oP.style.backgroundImage='url("3Dring/img2/'+(i+1)+'.jpg")';
+				oUl.appendChild(oP);
+				(function(oP,i){
+					setTimeout(function(){
+						oP.style.transition='1s all linear '+(200*(N-i))+'ms'
+						oP.style.transform='rotateY('+360/N*i+'deg) translateZ(300px)';
+					},0);
+				})(oP,i);
+			}
+			var aP=oUl.children;
+			var y=0;
+			var x=-10;
+			aP[0].addEventListener('transitionend',function(){
+				change(y,x);
+				oBtn.innerHTML='鼠标可以拖着转动';
+				document.onmousedown=function(ev){
+					var disX=ev.clientX-y;
+					var disY=ev.clientY+x;
+					document.onmousemove=function(ev){
+						y=ev.clientX-disX;
+						x=disY-ev.clientY;
+						change(y/3,x/3);
+					};
+					document.onmouseup=function(){
+						document.onmousemove=null;
+						document.onmouseup=null;
+					};
+					return false;
+				};
+			},false);
+			function change(y,x){
+				for(var i=0;i<aP.length;i++){
+					aP[i].style.transition = '0s all ease';
+					aP[i].style.transform='rotateY('+(360/N*i+y)+'deg) translateZ(300px)';
+					oUl.style.transform='perspective(800px) rotateX('+x+'deg)';
+					var scale=Math.abs(Math.abs((360/N*i+y)%360)-180)/180;
+					scale<0.3&&(scale=0.3);
+					aP[i].style.opacity=scale;
+				}
+			}					
+		}
+		bReady=false;
+	};
+
+window.onresize=function(){
+
+	init();
+	slideTab();
+
+};
+
+document.onkeyup = function( e ){
+
+	switch( e.keyCode ){
+		//left
+		case 37:
+			curIndex--;
+			if( curIndex < 0 ){
+				curIndex = li.length-1;
+			}
+			slideTab();
+			break;
+		case 39: 
+			curIndex++;
+			if( curIndex > li.length-1 ){
+				curIndex = 0;
+			}
+			slideTab();
+			break;
+	}
+
+};
+
+function init(){
+
+	liWidth = document.documentElement.clientWidth;
+
+	ul.style.width = liWidth * li.length + 'px';
+
+	for( var i = 0; i < li.length; i++ ){
+
+		li[ i ].style.width = liWidth + 'px';
+
+	}
+
+}
+
+function slideTab(){
+
+	var translate = 'translate('+ -liWidth * curIndex +'px,0)';
+
+	ul.style.transform = translate;
+	ul.style.webkitTransform = translate;
+	ul.style.mozTransform = translate;
+	ul.style.msTransform = translate;
+
+	document.querySelector( '#btn .active' ).removeAttribute( 'class' );
+	span[ curIndex ].className = 'active';
+
+	switch( curIndex ){
+		case 1:
+			var oBtn1=document.getElementById('btn1');
+			var oBtn2=document.getElementById('btn2');
+			var oUl2=document.getElementById('ul2');
+			var aP2=oUl2.children;
+			var arr=[];
+			for(var i=0;i<aP2.length;i++){
+				arr.push(aP2[i].className);
+			}
+			var bFlag=true;
+			oBtn1.onclick=function(){
+				if(!bFlag){
+					return;
+				}
+
+				arr.push(arr.shift());
+				
+				for(var i=0;i<aP2.length;i++){
+					aP2[i].className=arr[i];
+					console.log(aP2[i].style.background);
+					if(aP2[i].style.transform=='perspective(800px) translateX(0px) rotateY(0deg)'){
+						bFlag=true;
+					}
+				}
+			};
+			oBtn2.onclick=function(){
+				arr.unshift(arr.pop());
+
+				for(var i=0;i<aP2.length;i++){
+					aP2[i].className=arr[i];
+				}
+			};
+	}
+
+}
+
+</script>
+
+</body>
+</html>

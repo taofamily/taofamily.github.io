@@ -1,296 +1,293 @@
 <!DOCTYPE html>
-<html lang="zh-cn">
+<html lang="en">
 <head>
-<meta charset="UTF-8">
-<title>ParticleGround</title>
-<style>
-*{
-  list-style: none;
-  text-decoration: none;
-}
-html,body{
-  width: 100%;
-  height: 100%;
-  margin: 0;
-  overflow: hidden;
-}
-ul{
-  margin: 0;
-  padding: 0;
-}
-li{
-  list-style: none;
-}
-ul, li, img, section{
-  width: 100%;
-  height: 100%;
-}
-ul{
-  -webkit-transition: -webkit-transform 600ms;
-  -moz-transition: -moz-transform 600ms;
-  transition: transform 600ms;
-}
-li{
-  float: left;
-  position: relative;
-}
-#btn,
-li > *{
-  position: absolute;
-  left: 0;
-  top: 0;
-}
-.info{
-  margin: 1rem;
-  font: 20px "微软雅黑";
-  color: #ececec;
-  text-shadow: 2px 2px 0 #333;
-}
-#particle{
-  background-color: #000;
-}
-#wave{
-  background: #0076d1;
-  background: -webkit-linear-gradient(top,#0076d1,#5db8ff);
-  background: -moz-linear-gradient(top,#0076d1,#5db8ff);
-  background: linear-gradient(top,#0076d1,#5db8ff);
-}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Document</title>
+  <style>
+    *{
+      padding: 0;
+      margin: 0;
+      list-style: none;
+      text-decoration: none;
+    }
+    body{
+      background: black;
+    }
+    body,html{width:100%;height:100%;overflow:hidden;}
+    #div1{
+      width: 100px;
+      height: 100px;
+      background: black;
+      box-shadow: 20px 25px 10px #fff;
+      border-radius: 50%;
+      position: absolute;
+      right: 200px;
+      top: 50px;
+    }
+    #troduce{
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 40px; 
+      background: linear-gradient(30deg,blue,purple,green);
+      border-radius: 2px;
+      overflow: hidden;
+     }
+    #troduce a{
+      float: left; 
+      width: 120px;
+      height: 40px; 
+      line-height: 40px; 
+      text-align: center;
+      z-index: 2; 
+      position: relative; 
+      color: aqua;
+      font-size: 20px;
+     }
+    #troduce a.first{
+      border-radius: 2px;
+    }
+    #troduce a.on{ 
+      width: 120px;
+      height: 40px; 
+      line-height: 40px; 
+      text-align: center;
+      background: linear-gradient(30deg,#000,green,purple,blue);
+      position: absolute;
+      z-index: 1;  
+      left: 0;
+      top: 0;
+      border-radius: 2px;
+    }
+  </style>
+  <script src="move.js"></script>
+  <script>
+      var context;
+      var arr = new Array();
+      var starCount = 800;
+      var rains = new Array();
+      var rainCount =20;
 
-#btn{
-  z-index: 99;
-  top: auto;
-  bottom: 20px;
-  right: 0;
-  text-align: center;
-}
-#btn span{
-  display: inline-block;
-  width: 10px;
-  height: 10px;
-  margin-right: 10px;
-  background-color: #ccc;
-  border: 4px solid #fff;
-  box-shadow: 0 0 2px #ccc inset;
-  border-radius: 50%;
-  cursor: pointer;
-}
-#btn span:last-of-type{
-  margin-right: 0;
-}
-#btn .active{
-  background-color: aqua;
-  box-shadow: none;
-}
+            //初始化画布及context
+      function init(){
+        //获取canvas
+        var stars = document.getElementById("stars");
+        windowWidth = window.innerWidth; //当前的窗口的高度
+        stars.width=windowWidth;
+        stars.height=window.innerHeight;
+                //获取context
+        context = stars.getContext("2d");
+      }
 
-#fork img{
-  width: 149px;
-  height: 149px;
-  position: absolute;
-  z-index: 99;
-  top: -7px;
-  right: 0;
-  border: 0;
-}
-</style>
+            //创建一个星星对象
+      var Star = function (){
+          this.x = windowWidth * Math.random();//横坐标
+          this.y = 5000 * Math.random();//纵坐标
+          this.text=".";//文本
+          this.color = "white";//颜色
+        
+          //产生随机颜色
+          this.getColor=function(){
+              var _r = Math.random();
+              if(_r<0.5){
+                  this.color = "#333";
+              }else{
+                  this.color = "white";
+              }
+          };
+
+          //初始化
+          this.init=function(){
+              this.getColor();
+          };
+          //绘制
+          this.draw=function(){
+              context.fillStyle=this.color;
+              context.fillText(this.text,this.x,this.y);
+          };   
+      };
+
+             //画月亮
+            /*function drawMoon(){
+                 var moon = new Image();
+                    moon.src = "1.jpg";
+                    moon.onload = function () {
+                    context.drawImage(moon,-5,-10);
+                };
+                    
+            }*/
+
+          
+
+            //页面加载的时候A
+      window.onload = function() {
+        //菜单
+        var oTro=document.getElementById('troduce');
+        var aA=oTro.children;
+        for(var i=0;i<aA.length-1;i++){
+          aA[i].onmouseover=function(){
+            move(aA[aA.length-1],this.offsetLeft);
+          };
+          aA[i].onmouseout=function(){
+            move(aA[aA.length-1],0);
+          };
+        }
+        init();
+                //画星星
+        for (var i=0;i<starCount;i++) {
+            var star = new Star();
+            star.init();
+            star.draw();
+            arr.push(star);
+        }
+
+                //画流星
+        for (var i=0;i<rainCount;i++) {
+          var rain = new MeteorRain();
+          rain.init();
+          rain.draw();
+          rains.push(rain);
+        }
+                //drawMoon();//绘制月亮
+        playStars();//绘制闪动的星星
+        playRains();//绘制流星
+
+      };
+
+             //星星闪起来
+      function playStars(){
+          for (var n = 0; n < starCount; n++){  
+              arr[n].getColor();  
+              arr[n].draw();  
+          }  
+
+          setTimeout("playStars()",100);
+      }
+    /*流星雨开始*/
+      var MeteorRain = function(){
+        this.x = -1;
+        this.y = -1;
+        this.length = -1;//长度
+        this.angle = 30; //倾斜角度
+        this.width = -1;//宽度
+        this.height = -1;//高度
+        this.speed = 1;//速度
+        this.offset_x = -1;//横轴移动偏移量
+        this.offset_y = -1;//纵轴移动偏移量
+        this.alpha = 1; //透明度
+        this.color1 = "";//流星的色彩
+        this.color2 = "";  //流星的色彩
+    /****************初始化函数********************/
+      this.init = function () { //初始化
+        this.getPos();
+        this.alpha = 1;//透明度
+        this.getRandomColor();
+        //最小长度，最大长度
+        var x = Math.random() * 80 + 150;
+        this.length = Math.ceil(x);
+//                  x = Math.random()*10+30;
+        this.angle = 30; //流星倾斜角
+        x = Math.random()+0.5;
+        this.speed = Math.ceil(x); //流星的速度
+        var cos = Math.cos(this.angle*3.14/180);
+        var sin = Math.sin(this.angle*3.14/180) ;
+        this.width = this.length*cos ;  //流星所占宽度
+        this.height = this.length*sin ;//流星所占高度
+        this.offset_x = this.speed*cos ;
+        this.offset_y = this.speed*sin;
+      };
+    /**************获取随机颜色函数*****************/
+      this.getRandomColor = function (){
+        var a = Math.ceil(255-240* Math.random()); 
+        //中段颜色
+        this.color1 = "rgba("+a+","+a+","+a+",1)";
+        //结束颜色
+        this.color2 = "black";
+      };
+     /***************重新计算流星坐标的函数******************/
+      this.countPos = function () {//  
+        //往左下移动,x减少，y增加
+        this.x = this.x - this.offset_x;
+        this.y = this.y + this.offset_y;
+      };
+    /*****************获取随机坐标的函数*****************/
+      this.getPos = function () {//
+        //横坐标200--1200
+        this.x = Math.random() * window.innerWidth; //窗口高度
+        //纵坐标小于600
+        this.y = Math.random() * window.innerHeight;  //窗口宽度
+      };
+     /****绘制流星***************************/
+      this.draw = function ()  {//绘制一个流星的函数
+        context.save();
+        context.beginPath();
+        context.lineWidth = 1; //宽度
+        context.globalAlpha = this.alpha; //设置透明度
+        //创建横向渐变颜色,起点坐标至终点坐标
+        var line = context.createLinearGradient(this.x, this.y, 
+            this.x + this.width, 
+            this.y - this.height);
+        //分段设置颜色
+        line.addColorStop(0, "white");
+        line.addColorStop(0.3, this.color1);
+        line.addColorStop(0.6, this.color2);
+        context.strokeStyle = line;
+        //起点
+        context.moveTo(this.x, this.y);
+        //终点
+        context.lineTo(this.x + this.width, this.y - this.height);
+        context.closePath();
+        context.stroke();
+        context.restore();
+      };
+      this.move = function(){
+        //清空流星像素
+        var x = this.x+this.width-this.offset_x;
+        var y = this.y-this.height;
+        context.clearRect(x-3,y-3,this.offset_x+5,this.offset_y+5); 
+//                  context.strokeStyle="red";
+//                  context.strokeRect(x,y-1,this.offset_x+1,this.offset_y+1);
+        //重新计算位置，往左下移动
+        this.countPos();
+        //透明度增加
+        this.alpha -= 0.002;
+        //重绘
+        this.draw(); 
+      };
+    
+    };
+//绘制流星
+    function playRains(){
+      for (var n = 0; n < rainCount; n++){  
+          var rain = rains[n];
+          rain.move();//移动
+          if(rain.y>window.innerHeight){//超出界限后重来
+              context.clearRect(rain.x,rain.y-rain.height,rain.width,rain.height);
+              rains[n] = new MeteorRain();
+              rains[n].init();
+          }
+      }  
+      setTimeout("playRains()",2);
+    }
+  /*流星雨结束*/
+  </script>
 </head>
 <body>
-
-<ul>
-  <li id="particle">
-    <section class="container"></section>
-    <div id="troduce"  style="width:80px;height:30px ;background:#ccc; border-radius:2px; line-height:30px;text-align:center">
-      <a href="http://taofamily.github.io/arcClock/arcClock.html">弧版时钟</a>
-      <a href="http://taofamily.github.io/arcClock/arcClock.html">简易音乐播放器</a>
-      <a href="http://taofamily.github.io/arcClock/arcClock.html">简易音乐播放器</a>
+  <div id="box">
+    <canvas id="stars"></canvas>
+    <div id="div1"></div>
+    <div id="troduce"  >
+      <a href="https://github.com/taofamily/taofamily.github.io" class="first">个人主页</a>
+      <a href="http://taofamily.github.io/musicPlayer.html">音乐播放器</a>
+      <a href="http://taofamily.github.io/bomb/bomb.html">爆炸效果</a>
+      <a href="http://taofamily.github.io/rotate/rotate.html">翻转效果</a>
+      <a href="http://taofamily.github.io/animation.html">动画效果</a>
+      <a href="http://taofamily.github.io/arcClock/arcClock.html">CANVAS</a>
+      <a href="http://taofamily.github.io" style="float:right">关于我</a>
+      <a href="javascript:;" class="on"></a>
     </div>
-  </li>
-  <li id="wave">
-    <section class="container"></section>
-  </li>
-  <li id="snow">
-    <img src="1.jpg">
-    <section class="container"></section>
-  </li>
-</ul>
-
-<aside id="btn">
-  <span class="active" title="粒子运动"></span>
-  <span title="波浪运动"></span>
-  <span title="雪花飘落"></span>
-</aside>
-
-
-<!-- 引入插件 -->
-<script src="particleground.min.js"></script>
-<script>
-var span = document.getElementById( 'btn' ).getElementsByTagName( 'span' );
-var ul = document.getElementsByTagName( 'ul' )[0];
-var li = ul.getElementsByTagName( 'li' );
-var liWidth = 0;
-var curIndex = 0;
-
-init();
-
-//插件粒子运动API
-//注：Particleground下的三个对象都有着pause和open方法，用于暂停和开启动画
-var particle = new Particleground.particle( '#particle .container', {
-  //全局透明度，默认0.8
-  opacity: .8,
-  //粒子颜色数组，默认随机色
-  // color: [ 'rgba( 255, 255, 255, .5 )', 'red', 'green', 'blue' ],
-  //粒子个数，默认为容器的0.1倍
-  //传入[0, 1)显示容器相应倍数的值，或传入具体个数[1, +∞)
-  num: .1,
-  //运动速度[0, +∞]，默认1
-  speed: 1,
-  //粒子最大半径，默认2.4
-  max: 2.4,
-  //粒子最小半径，默认0.6
-  min: .6,
-  //连接线最大距离，默认180
-  dis: 180,
-  //连接线段的宽度，默认0.2
-  lineWidth: .2,
-  //范围越大，连接的点越多，默认240
-  r: 240,
-  //移动事件的元素,默认为canvas，或传入原生js选择元素
-  // eventElem: document,
-  //让画布宽高自适应窗口大小的改变，默认false
-  resize: true
-});
-var wave, snow;
-
-for( var i = 0; i < span.length; i++ ){
-
-  span[ i ].index = i;
-  span[ i ].onclick = function(){
-
-    curIndex = this.index;
-    slideTab();
-
-  };
-
-}
-
-window.onresize = function(){
-
-  init();
-  slideTab();
-
-};
-
-document.onkeyup = function( e ){
-
-  switch( e.keyCode ){
-    //left
-    case 37:
-      curIndex--;
-      if( curIndex < 0 ){
-        curIndex = li.length-1;
-      }
-      slideTab();
-      break;
-    case 39: 
-      curIndex++;
-      if( curIndex > li.length-1 ){
-        curIndex = 0;
-      }
-      slideTab();
-      break;
-  }
-
-};
-
-function init(){
-
-  liWidth = document.documentElement.clientWidth;
-
-  ul.style.width = liWidth * li.length + 'px';
-
-  for( var i = 0; i < li.length; i++ ){
-
-    li[ i ].style.width = liWidth + 'px';
-
-  }
-
-}
-
-function slideTab(){
-
-  var translate = 'translate('+ -liWidth * curIndex +'px,0)';
-
-  ul.style.transform = translate;
-  ul.style.webkitTransform = translate;
-  ul.style.mozTransform = translate;
-  ul.style.msTransform = translate;
-
-  document.querySelector( '#btn .active' ).removeAttribute( 'class' );
-  span[ curIndex ].className = 'active';
-
-  switch( curIndex ){
-    case 0:
-      particle.open();
-      wave && wave.pause();
-      snow && snow.pause();
-      break;
-    case 1:
-      if( wave ){
-
-        wave.open();
-
-      }else{
-
-        //波浪运动API
-        wave = new Particleground.wave( '#wave .container', {
-          //全局透明度，默认0.8
-          opacity: .8,
-          //线条颜色，默认白色
-          color: '#fff',
-          //线条个数，默认1条，暂未开放
-          // num: 3,
-          //线条最大宽度(粒子最大半径)，默认1.4
-          max: 1.4,
-          //线条最小宽度，默认0.2
-          min: .2,
-          //波峰，默认高度的0.8倍，取值[0-1]，暂未开放
-          // crest: .6,
-          //线条运动速度，默认1.4
-          speed: 1.4,
-          resize: true
-        });
-
-      }
-      particle.pause();
-      snow && snow.pause();
-      break;
-    case 2:
-      if( snow ){
-
-        snow.open();
-
-      }else{
-
-        //雪花飘落API
-        snow = new Particleground.snow( '#snow .container', {
-          //雪花颜色，默认白色
-          color: '#fff',
-          //雪花最大半径，默认6.5
-          max: 6.5,
-          //雪花最小半径，默认0.4
-          min: .4,
-          //运动速度，默认0.4
-          speed: .4,
-          resize: true
-        });
-
-      }
-      particle.pause();
-      wave && wave.pause();
-      break;
-  }
-
-}
-</script>
-
+  </div>
 </body>
 </html>

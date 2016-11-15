@@ -1,52 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-	<meta charset="UTF-8">
-	<title>Document</title>
-	<style>
-		*{
-			list-style: none;
-			padding: 0;
-			margin: 0;
-		}
-		body,html{
-			width: 100%;
-			height: 100%;
-			overflow: hidden;
-			background:#000;
-		}
-		#ul1{
-			width: 133px;
-			height: 200px;
-			text-align: center;
-			line-height: 200px;
-			color: pink;
-			border-radius: 2px;
-			margin: 100px auto;
-			background:linear-gradient(45deg,red,green,#fff);
-			position: relative;
-			transform-style: preserve-3d;
-			transform: perspective(800px) rotateX(-10deg);
-		}
-		li{	
-			position: absolute;
-			left: 0;
-			top: 0;
-			width: 100%;
-			height: 100%;
-			border-radius: 8px;
-			background:url("img2/1.jpg") no-repeat;
-			-webkit-box-reflect:below 10px -webkit-linear-gradient(rgba(0,0,0,0) 40%,rgba(0,0,0,.4));
-			-webkit-box-shadow:0 0 10px #fff;
-			transition: 1s all linear;
-			transform: rotateY(0deg) translateZ(0px);
-		}
-		#ul1:hover li{
-			/* transform: rotateY(60deg) translateZ(300px); */
-		}
-	</style>
-	<script>
-		window.onload=function(){
+window.onload=function(){
 			var oUl=document.getElementById('ul1');
 			var N=11;
 			for(var i=0;i<N;i++){
@@ -91,12 +43,3 @@
 				}
 			}
 		};
-	</script>
-</head>
-<body>
-	<ul id="ul1">
-		祝您玩得开心
-		<!-- <li></li> -->
-	</ul>
-</body>
-</html>

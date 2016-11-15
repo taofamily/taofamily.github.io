@@ -7,7 +7,7 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Document</title>
     <style>
-        #box{
+        #clock{
             width: 300px;
             height: 300px;
             background: #ccc;
@@ -17,10 +17,10 @@
             background:url("pan.png") no-repeat;
             background-size:contain;
         }
-        #box div{
+        #clock div{
             transform-origin:center bottom;
         }
-        #box .hour{
+        #clock .hour{
             width:14px;
             height: 80px;
             background: #000;
@@ -30,7 +30,7 @@
             top:50%;
             margin:-80px 0 0 -7px;
         }
-        #box .min{
+        #clock .min{
             width:10px;
             height: 100px;
             background: #000;
@@ -40,7 +40,7 @@
             top:50%;
             margin:-100px 0 0 -5px;
         }
-        #box .sec{
+        #clock .sec{
             width:8px;
             height: 120px;
             background: red;
@@ -50,7 +50,7 @@
             top:50%;
             margin:-120px 0 0 -4px;
         }
-        #box .cap{
+        #clock .cap{
             width:20px;
             height: 20px;
             background:-webkit-radial-gradient(#eee,#000);
@@ -86,7 +86,7 @@
     </script>
 </head>
 <body>
-<div id="box">
+<div id="clock">
     <div class="hour"></div>
     <div class="min"></div>
     <div class="sec"></div>

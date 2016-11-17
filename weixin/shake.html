@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="author" content="智能社 - zhinengshe.com">
+<meta name ="viewport" content="width=320">
+<meta name="copyright" content="智能社 - zhinengshe.com">
+<title>智能社 - www.zhinengshe.com</title>
+<style>
+    #div1{
+        background: red;
+        width: 200px;
+        height: 200px;
+    }
+    @keyframes move {
+        0%{
+            transform:rotate(0);
+        }
+        25%{
+            transform:rotate(-15deg);
+        }
+        50%{
+            transform:rotate(0);
+        }
+        75%{
+            transform:rotate(15deg);
+        }
+        100%{
+            transform:rotate(0);
+        }
+    }
+    .shake{
+        animation:2s move ease;
+    }
+</style>
+<script>
+    window.onload = function(){
+        function rnd(m,n){
+            return Math.floor(m+Math.random()*(n-m));
+        }
+        var oDiv = document.getElementById('div1');
+        if(window.DeviceMotionEvent){
+            window.addEventListener('devicemotion',function(ev){
+                console.log(ev);
+                var acc = ev.accelerationIncludingGravity;
+//                alert('x:'+acc.x+',y:'+acc.y+',z:'+acc.z);
+                if(
+                      Math.abs(acc.x)>10||
+                      Math.abs(acc.y)>10||
+                      Math.abs(acc.z)>10
+                ){
+
+                    oDiv.classList.add('shake');
+                    oDiv.addEventListener('animationend',function(){
+                        alert(1);
+                        oDiv.classList.remove('shake');
+                    },false)
+
+                }
+            },false);
+        }else{
+            alert('不支持');
+        }
+
+    };
+</script>
+</head>
+<body>
+    <a href="http://taofamily.github.io/index.html">返回首页</a>
+    <div id="div1"></div>
+</body>
+</html>
